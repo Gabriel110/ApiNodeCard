@@ -35,10 +35,10 @@ export default class CardController{
     async remove(req:Request, res:Response){
         try{
             const {id} = req.params
-            const card = await database(table).select('*').where({id})
-            if(!card) return res.status(404).json("Card not found")
-            await database(table).del().where({"id":id})
-            return res.status(200).send
+            const card = await database(table).where({id}).limit(1)
+            if(!card[0]) return res.status(404).json(`File not fould id:${id}`)
+            await database(table).del("*").where({id})
+            return res.status(200).json(`File with id:${id} deleted successfully`) 
         }catch(err){
             res.status(400).json({
                 erro:'Unexpect error while create new class'
